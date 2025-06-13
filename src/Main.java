@@ -1,5 +1,6 @@
 import model.*;
 import repository.*;
+import security.PasswordHasher;
 import service.*;
 
 public class Main {
@@ -10,11 +11,11 @@ public class Main {
         VoteRepository voteRepo = new VoteRepository();
         VotingSession session = new VotingSession();
         AuthService authService = new AuthService(userRepo);
-        VotingService votingService = new VotingService(candidateRepo, voteRepo, session);
+        VotingService votingService = new VotingService(candidateRepo, userRepo, voteRepo, session);
 
         // Admin e eleitores
-        Admin admin = new Admin("admin1", "adminpass");
-        Elector e1 = new Elector("user1", "pass1");
+        Admin admin = new Admin("admin1", PasswordHasher.hashPassword("adminpass"));
+        Elector e1 = new Elector("user1", PasswordHasher.hashPassword("pass1"));
 
         userRepo.addUser(admin);
         userRepo.addUser(e1);
@@ -29,7 +30,7 @@ public class Main {
         // Login e votação
         User u = authService.login("user1", "pass1");
         if (u instanceof Elector) {
-            Elector eleitor = (Elector) u;
+            Elector elector = (Elector) u;
 
             // Mostrar candidatos
             System.out.println("📋 Candidatos:");
@@ -38,15 +39,15 @@ public class Main {
             }
 
             // Votar
-            votingService.vote(eleitor, "C2");
+            votingService.vote(elector.getUsername(), "C2");
             // Tentativa dupla
-            votingService.vote(eleitor, "C1");
+            votingService.vote(elector.getUsername(), "C1");
         }
 
         // Simular tentativa de votar 2 vezes
         Elector eleitor = (Elector) authService.login("user1", "pass1");
-        votingService.vote(eleitor, "C1"); // Deve aceitar
-        votingService.vote(eleitor, "C2"); // Deve recusar
+        votingService.vote(eleitor.getUsername(), "C1"); // Deve aceitar
+        votingService.vote(eleitor.getUsername(), "C2"); // Deve recusar
 
         // Encerrar votação
         session.endVoting(admin.getUsername());

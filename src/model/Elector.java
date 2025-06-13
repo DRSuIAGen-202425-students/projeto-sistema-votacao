@@ -1,24 +1,13 @@
 package model;
 
+import security.PasswordHasher;
+
 public class Elector extends User {
-    private boolean hasVoted = false;
+    private boolean hasVoted;
 
-    public Elector(String username, String password) {
-        super(username, password);
-    }
-    public boolean hasVoted() {
-        return hasVoted;
-    }
-
-    /*public void setHasVoted(boolean hasVoted) {
-        this.hasVoted = hasVoted;
-    }*/
-
-    public void setHasVoted(boolean hasVoted) {
-        if (this.hasVoted && !hasVoted) {
-            throw new IllegalStateException("Não é possível remover marcação de voto.");
-        }
-        this.hasVoted = hasVoted;
+    public Elector(String username, String passwordHash) {
+        super(username, passwordHash);
+        this.hasVoted = false;
     }
 
     @Override
@@ -26,8 +15,18 @@ public class Elector extends User {
         return "ELECTOR";
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public boolean hasVoted() {
+        return hasVoted;
     }
 
+    public void setPassword(String plainPassword) {
+        this.passwordHash = PasswordHasher.hashPassword(plainPassword);
+    }
+
+    public void setHasVoted(boolean hasVoted) {
+        if (this.hasVoted && !hasVoted) {
+            throw new IllegalStateException("Não é possível remover marcação de voto.");
+        }
+        this.hasVoted = hasVoted;
+    }
 }

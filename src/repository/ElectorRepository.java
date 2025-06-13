@@ -12,10 +12,10 @@ public class ElectorRepository {
         return true;
     }
 
-    public boolean editElector(String username, String newPassword) {
+    public boolean editElector(String username, String newPasswordPlain) {
         Elector elector = electors.get(username);
         if (elector != null) {
-            elector.setPassword(newPassword);
+            elector.setPassword(newPasswordPlain);
             return true;
         }
         return false;

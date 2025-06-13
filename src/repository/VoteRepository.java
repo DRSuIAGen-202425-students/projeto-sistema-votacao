@@ -10,13 +10,17 @@ public class VoteRepository {
         votes.add(vote);
     }
 
-    public boolean hasVoted(String electorUsername) {
-        return votes.stream()
-                .anyMatch(v -> v.getElectorUsername().equals(electorUsername));
+    public int countVotesForCandidate(String candidateId) {
+        return (int) votes.stream()
+                .filter(v -> v.getCandidateId().equals(candidateId))
+                .count();
+    }
+
+    public int totalVotes() {
+        return votes.size();
     }
 
     public List<Vote> getAllVotes() {
-        return votes;
+        return new ArrayList<>(votes);
     }
-
 }

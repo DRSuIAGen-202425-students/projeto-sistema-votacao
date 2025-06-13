@@ -38,5 +38,4 @@ public class CandidateRepository {
     public Candidate getCandidate(String id) {
         return candidates.get(id);
     }
-
 }
