@@ -5,7 +5,7 @@ import service.*;
 
 public class Main {
     public static void main(String[] args) {
-        // Setup :)
+        // Setup
         UserRepository userRepo = new UserRepository();
         CandidateRepository candidateRepo = new CandidateRepository();
         VoteRepository voteRepo = new VoteRepository();
